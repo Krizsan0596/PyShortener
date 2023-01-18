@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyShortener</title>
+</head>
+<body>
+    <script>
+        function showHideTextbox() {
+        var checkbox = document.getElementById("customLinkBox");
+        var textbox = document.getElementById("customLink");
+        if (checkbox.checked) {
+            textbox.style.display = "block";
+        } else {
+            textbox.style.display = "none";
+        }
+}
+
+    </script>
+    <h3>Enter the link you want to shorten below.</h3>
+    <form method="post">
+        <input type="text" name="input_link" placeholder="Link to shorten">
+        <input type="checkbox" id="customLinkBox" name="custom_link_box" onclick="showHideTextbox()">
+        <label for="customLinkBox">Use custom link</label>
+        <br>
+        <input type="text" id="customLink" name="custom_link" style="display:none;" placeholder="Custom link eg. mylink">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
