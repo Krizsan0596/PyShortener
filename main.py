@@ -4,10 +4,14 @@ import os
 import string
 import secrets
 import pickle
-from flask import Flask, request, redirect, render_template
+import hashlib
+from flask import Flask, request, redirect, render_template, flash, request
 
 
 app = Flask(__name__)
+chars = string.ascii_letters + string.digits + '-'
+length = 8
+
 
 if os.path.exists('links.pkl'):
     with open('links.pkl', 'rb') as file:
@@ -15,17 +19,27 @@ if os.path.exists('links.pkl'):
 else:
     links = {}
 
-chars = string.ascii_letters
-length = 8
+def hash(input):
+    hash_obj = hashlib.md5()
+    hash_obj.update(bytes(input))
+    hashed = hash_obj.hexdigest()
+    return hashed
 
 @app.route('/', methods=['GET', 'POST'])
 def generate_link():
     if request.method == 'POST':
         link = request.form['input_link']
+        if len(str(link)) > 2000:
+            flash("Url too long. Perhaps try a shorter one.")
+            return redirect(request.url)
         is_custom_link = request.form['custom_link_box']
         if is_custom_link:
             custom_link = request.form['custom_link']
-            short = custom_link
+            if hash(custom_link) in links:
+                flash("Custom link already in use.")
+                return redirect(request.url)
+            else:
+                short = custom_link
         else:
             short = ''.join(secrets.choice(chars) for i in range(length))
         if not link.startswith(("http://", "https://")):
